@@ -263,7 +263,7 @@ SELECT OORDDTA.oper_aff_id AS oper_aff_id,
   OORDLIN.adj_ln_bv     AS adj_ln_bv,
   OORDLIN.ord_qty       AS ord_qty,
   OORDLIN.shp_qty       AS shp_qty,
-  NULL                  AS deliverymode,
+  NULL                  AS delivery_mode_cd,
   NULL                  AS consultant_cd
 FROM OORDLIN OORDLIN
 LEFT JOIN OORDDTA OORDDTA
