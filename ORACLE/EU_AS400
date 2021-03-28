@@ -47,7 +47,7 @@ WITH ORD_HDR AS
       WHEN ORD_CURCY ='CIP'
       THEN 'GBP'
       ELSE CAST(ORD_CURCY AS VARCHAR2(3 CHAR))
-    END AS curcy_id,
+    END AS curcy_cd,
     CASE
       WHEN COMB_ORD_FLG='Y'
       THEN 'true'
@@ -226,7 +226,7 @@ SELECT OORDDTA.oper_aff_id AS oper_aff_id,
   OORDDTA.comb_ord_id      AS comb_ord_id,
   OORDDTA.ord_id           AS ord_id,
   OORDDTA.inv_cd           AS inv_cd,
-  OORDDTA.curcy_id         AS curcy_id,
+  OORDDTA.curcy_cd         AS curcy_cd,
   OORDDTA.ord_channel      AS ord_channel,
   OORDDTA.whse_cd          AS whse_cd,
   OORDDTA.ord_whse_cd      AS ord_whse_cd,
