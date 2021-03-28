@@ -110,7 +110,7 @@ WITH ORD_HDR AS
         END
     END               AS imc_type_ord,
     DDSTADR.postal_cd AS shp_postal_cd,
-    ORD_HNDLG_PRICE   AS delivery_fee
+    ORD_HNDLG_PRICE   AS delivery_fee_net
   FROM ORD_HDR ORD_HDR
   LEFT JOIN DWSATM01.dwt42051_ord_sales_chnl ORD_CHNL
   ON ORD_HDR.oper_cntry_id=CAST(ORD_CHNL.CNTRY_CD AS INTEGER)
@@ -243,7 +243,7 @@ SELECT OORDDTA.oper_aff_id AS oper_aff_id,
   OORDDTA.org_ord_id       AS org_ord_id,
   OORDDTA.ord_type_cd      AS ord_type_cd,
   OORDDTA.drop_cd          AS drop_cd,
-  OORDDTA.delivery_fee     AS delivery_fee,
+  OORDDTA.delivery_fee_net     AS delivery_fee_net,
   OORDLIN.ord_ln_id        AS ord_ln_id,
   OORDLIN.ref_ln_id        AS ref_ln_id,
   OORDLIN.ord_item_cd      AS ord_item_cd,
