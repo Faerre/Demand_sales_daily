@@ -32,8 +32,8 @@ WITH OORDDTA AS
     CAST(T0.SALES_ORDER_ID AS INTEGER)                              AS ord_id,
     T0.ISO_CURRENCY_CODE                                            AS curcy_cd,
     T0.SALES_CHANNEL_CODE                                           AS ord_channel,
-    CAST(CONS_T.WAREHOUSE_CODE AS       VARCHAR2(240))                    AS whse_cd,
-    CAST(CONS_T.DELIVERY_POSTAL_CODE AS VARCHAR2(240))                    AS shp_postal_cd,
+    CAST(CONS_T.WAREHOUSE_CODE AS       VARCHAR2(240 CHAR))               AS whse_cd,
+    CAST(CONS_T.DELIVERY_POSTAL_CODE AS VARCHAR2(240 CHAR))               AS shp_postal_cd,
     CAST(T0.VOLUME_SALES_ACCOUNT_ID AS  INTEGER)                          AS account_id,
     /*map to orderfromsalesaccount once it will appear in orderheader*/
     CAST(NULLIF('0', '0') AS VARCHAR2(8 BYTE)) AS account_type_ord,
@@ -61,10 +61,10 @@ WITH OORDDTA AS
       THEN 'true'
       ELSE 'false'
     END                                                                                 AS ord_paid_flag,
-    CAST(REGEXP_REPLACE(T0.ORIGINAL_ORDER_ID, '[,.]', '') AS INTEGER)                                               AS org_ord_id,
-    CAST(NULLIF('0', '0') AS     VARCHAR2(240 CHAR))                                    AS ord_type_cd,
-    CAST(NULLIF('0', '0') AS     VARCHAR2(240 CHAR))                                    AS drop_cd,
-    CONS_T.AMWAY_SALES_ENTITY AS CONS_AMWAY_SALES_ENTITY,
+    CAST(REGEXP_REPLACE(T0.ORIGINAL_ORDER_ID, '[,.]', '') AS INTEGER)                   AS org_ord_id,
+    CAST(NULLIF('0', '0') AS                                 VARCHAR2(240 CHAR))        AS ord_type_cd,
+    CAST(NULLIF('0', '0') AS                                 VARCHAR2(240 CHAR))        AS drop_cd,
+    CONS_T.AMWAY_SALES_ENTITY                                                           AS CONS_AMWAY_SALES_ENTITY,
     NULLIF(CAST(T0.TOTAL_ORDER_VALUE AS NUMBER)-CAST(T0.TOTAL_TAX_AMOUNT AS NUMBER), 0) AS NET_REVENUE_TTL
   FROM DWSATM01.DWT42231_ORD_HDR_EAP T0
   LEFT JOIN
@@ -90,20 +90,20 @@ WITH OORDDTA AS
     /*Map to valid ship date once it will appear in order lines*/
     200001 AS shp_mo_yr_id,
     /*Map to valid ship date once it will appear in order lines*/
-    CAST(SALES_ORDER_ID AS   INTEGER)                                                    AS ord_id,
-    CAST(T0.ORDER_LINE_ID AS INTEGER)                                                    AS ord_ln_id,
-    CAST(NULLIF(0,0) AS      NUMBER(38))                                                 AS ref_ln_id,
-    CAST('*' AS              VARCHAR2(240 BYTE))                                         AS ord_ln_disp_cd,
-    trim(COALESCE(BUNDLE_ITEM_ID, BASE_ITEM_ID))                                         AS ord_item_cd,
-    trim(BASE_ITEM_ID)                                                                   AS shp_item_cd,
+    CAST(SALES_ORDER_ID AS                               INTEGER)                        AS ord_id,
+    CAST(T0.ORDER_LINE_ID AS                             INTEGER)                        AS ord_ln_id,
+    CAST(NULLIF(0,0) AS                                  NUMBER(38))                     AS ref_ln_id,
+    CAST('*' AS                                          VARCHAR2(240 CHAR))             AS ord_ln_disp_cd,
+    CAST(trim(COALESCE(BUNDLE_ITEM_ID, BASE_ITEM_ID)) AS VARCHAR2(960 BYTE))             AS ord_item_cd,
+    CAST(trim(BASE_ITEM_ID) AS                           VARCHAR2(240 CHAR))             AS shp_item_cd,
     SUM(CAST(CAST(T0.LINE_PRICE AS NUMBER) AS NUMBER)) OVER(partition BY SALES_ORDER_ID) AS NET_REV_BEFORE_ADJ_TTL,
     CAST(T0.LINE_PRICE AS NUMBER)                                                        AS NET_REV_BEFORE_ADJ,
     T0.LINE_PV_AMOUNT                                                                    AS adj_ln_pv,
     T0.LINE_BV_AMOUNT                                                                    AS adj_ln_bv,
     COALESCE(T0.SHIPPED_QUANTITY, 0)+COALESCE(T0.PENDING_QUANTITY, 0)                    AS ord_qty,
     COALESCE(T0.ORDERED_QUANTITY, 0)-COALESCE(T0.CANCELLED_QUANTITY,0)                   AS shp_qty,
-    DEMAND_LOCATION                                                                      AS ord_whse_cd,
-    FULFILLMENT_TYPE                                                                     AS delivery_mode_cd
+    CAST(DEMAND_LOCATION AS  VARCHAR2(240 CHAR))                                          AS ord_whse_cd,
+    CAST(FULFILLMENT_TYPE AS VARCHAR2(240 CHAR))                                          AS delivery_mode_cd
   FROM DWSATM01.DWT42332_ORD_LINE_EAP T0
   ),
   FEES_T AS
@@ -128,19 +128,19 @@ WITH OORDDTA AS
 /*Main script*/
 SELECT OORDDTA.oper_aff_id                         AS oper_aff_id,
   OORDDTA.oper_cntry_id                            AS oper_cntry_id,
-  OORDDTA.shp_cntry_id                             AS shp_cntry_id,
-  OORDDTA.ord_dt                                   AS ord_dt,
+  CAST(OORDDTA.shp_cntry_id AS  NUMBER(38,0))      AS shp_cntry_id,
+  CAST(OORDDTA.ord_dt AS        TIMESTAMP(6))      AS ord_dt,
   CAST(OORDDTA.ord_dt_key_no AS NUMBER(8, 0))      AS ord_dt_key_no,
   CAST(OORDDTA.ord_mo_yr_id AS  NUMBER(6, 0))      AS ord_mo_yr_id,
   OORDLIN.shp_dt                                   AS shp_dt,
   CAST(OORDLIN.shp_dt_key_no AS NUMBER(8, 0))      AS shp_dt_key_no,
   CAST(OORDLIN.shp_mo_yr_id AS  NUMBER(6, 0))      AS shp_mo_yr_id,
   OORDDTA.comb_ord_flag                            AS comb_ord_flag,
-  OORDDTA.comb_ord_id                              AS comb_ord_id,
+  CAST(OORDDTA.comb_ord_id AS NUMBER(38,0))        AS comb_ord_id,
   OORDDTA.ord_id                                   AS ord_id,
   CAST(INV_T.INVOICE_NUMBER AS VARCHAR2(240 CHAR)) AS inv_cd,
-  OORDDTA.curcy_cd                                 AS curcy_cd,
-  OORDDTA.ord_channel                              AS ord_channel,
+  CAST(OORDDTA.curcy_cd AS     VARCHAR2(3 CHAR))   AS curcy_cd,
+  CAST(OORDDTA.ord_channel AS  VARCHAR2(240 CHAR)) AS ord_channel,
   OORDDTA.whse_cd                                  AS whse_cd,
   OORDLIN.ord_whse_cd                              AS ord_whse_cd,
   OORDDTA.shp_postal_cd                            AS shp_postal_cd,
@@ -153,12 +153,16 @@ SELECT OORDDTA.oper_aff_id                         AS oper_aff_id,
   OORDDTA.ord_shp_flag                             AS ord_shp_flag,
   OORDDTA.pay_req_flag                             AS pay_req_flag,
   OORDDTA.ord_paid_flag                            AS ord_paid_flag,
-  OORDDTA.org_ord_id          AS org_ord_id,
+  OORDDTA.org_ord_id                               AS org_ord_id,
   OORDDTA.ord_type_cd                              AS ord_type_cd,
   OORDDTA.drop_cd                                  AS drop_cd,
-  CASE WHEN OORDDTA.CONS_AMWAY_SALES_ENTITY IS NULL THEN 0 ELSE FEES_T.delivery_fee_net         END                  AS delivery_fee_net,
-  OORDLIN.ord_ln_id                                AS ord_ln_id,
-  OORDLIN.ref_ln_id                                AS ref_ln_id,
+  CASE
+    WHEN OORDDTA.CONS_AMWAY_SALES_ENTITY IS NULL
+    THEN 0
+    ELSE FEES_T.delivery_fee_net
+  END               AS delivery_fee_net,
+  OORDLIN.ord_ln_id AS ord_ln_id,
+  OORDLIN.ref_ln_id AS ref_ln_id,
   OORDLIN.ord_ln_disp_cd,
   OORDLIN.ord_item_cd AS ord_item_cd,
   OORDLIN.shp_item_cd AS shp_item_cd,
@@ -178,7 +182,7 @@ SELECT OORDDTA.oper_aff_id                         AS oper_aff_id,
   OORDLIN.ord_qty                                                                                                           AS ord_qty,
   OORDLIN.shp_qty                                                                                                           AS shp_qty,
   OORDLIN.delivery_mode_cd                                                                                                  AS delivery_mode_cd,
-  CAST(NULLIF('0', '0') AS VARCHAR2(50 CHAR))                                                                         AS consultant_cd      
+  CAST(NULLIF('0', '0') AS VARCHAR2(50 CHAR))                                                                               AS consultant_cd
 FROM OORDLIN OORDLIN
 LEFT JOIN OORDDTA OORDDTA
 ON OORDLIN.ord_id            =OORDDTA.ord_id
