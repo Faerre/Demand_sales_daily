@@ -75,9 +75,9 @@ WITH ORD_HDR AS
     ORD_DISTB AS ord_account_id,
     SHP_DISTB AS shp_account_id,
     CASE
-      WHEN ORD_CANC='Y'
-      THEN 'true'
-      ELSE 'false'
+      WHEN ORD_CANC='N'
+      THEN 'false'
+      ELSE 'true'
     END AS ord_canc_flag,
     CASE
       WHEN ORD_SHP='N'
