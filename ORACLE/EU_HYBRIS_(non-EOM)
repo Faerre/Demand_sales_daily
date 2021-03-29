@@ -24,22 +24,22 @@ WITH OORDDTA AS
     COALESCE(ORD_WHSE_NM, WHSE_NM) AS ord_whse_cd,
     TRIM(DLVRY_ADDR_POST_CD)       AS shp_postal_cd,
     CASE
-      WHEN (COALESCE(INTGRT_AFF_CD, AFF_CD)='160'
+      WHEN (COALESCE(T0.INTGRT_CNTRY_CD, T0.CNTRY_CD)='160'
       AND VOL_IMC_NO                       ='3000001')
-      OR (COALESCE(INTGRT_AFF_CD, AFF_CD)  ='060'
+      OR (COALESCE(T0.INTGRT_CNTRY_CD, T0.CNTRY_CD)  ='060'
       AND VOL_IMC_NO                       ='8')
-      OR (COALESCE(INTGRT_AFF_CD, AFF_CD) IN ('210', '080', '110')
+      OR (COALESCE(T0.INTGRT_CNTRY_CD, T0.CNTRY_CD) IN ('210', '080', '110')
       AND VOL_IMC_NO                       ='3')
       THEN DWSEAI01.STR2INT(RPAD(TRIM(DLVRY_ADDR_FAM_NM
         ||DLVRY_ADDR_GIVEN_NM),7,'X'))
       ELSE CAST(BILL_IMC_NO AS INTEGER)
     END AS account_id,
     CASE
-      WHEN (COALESCE(INTGRT_AFF_CD, AFF_CD)='160'
+      WHEN (COALESCE(T0.INTGRT_CNTRY_CD, T0.CNTRY_CD)='160'
       AND VOL_IMC_NO                       ='3000001')
-      OR (COALESCE(INTGRT_AFF_CD, AFF_CD)  ='060'
+      OR (COALESCE(T0.INTGRT_CNTRY_CD, T0.CNTRY_CD)  ='060'
       AND VOL_IMC_NO                       ='8')
-      OR (COALESCE(INTGRT_AFF_CD, AFF_CD) IN ('210', '080', '110')
+      OR (COALESCE(T0.INTGRT_CNTRY_CD, T0.CNTRY_CD) IN ('210', '080', '110')
       AND VOL_IMC_NO                       ='3')
       THEN 'FOA'
       ELSE
