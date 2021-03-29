@@ -59,7 +59,7 @@ WITH ORD_HDR AS
     WHSE                         AS whse_cd,
     ORD_WHSE                     AS ord_whse_cd,
     CAST(ORD_DT/ 100 AS INTEGER) AS ord_mo_yr_id,
-    TO_DATE(ORD_DT||ORD_TM, 'YYYYMMDDHH24MISS')  AS ord_dt,
+    TO_DATE(ORD_DT||LPAD(ORD_TM,6,'0'), 'YYYYMMDDHH24MISS')  AS ord_dt,
     ORD_DT                       AS ord_dt_key_no,
     CAST(ORD_DT/ 100 AS INTEGER) AS shp_mo_yr_id,
     TO_DATE(DLVR_DT, 'YYYYMMDD') AS shp_dt,
