@@ -182,7 +182,8 @@ SELECT OORDDTA.oper_aff_id                         AS oper_aff_id,
   OORDLIN.ord_qty                                                                                                           AS ord_qty,
   OORDLIN.shp_qty                                                                                                           AS shp_qty,
   OORDLIN.delivery_mode_cd                                                                                                  AS delivery_mode_cd,
-  CAST(NULLIF('0', '0') AS VARCHAR2(50 CHAR))                                                                               AS consultant_cd
+  CAST(NULLIF('0', '0') AS VARCHAR2(50 CHAR))                                                                               AS consultant_cd,
+  CAST(SYSDATE AS TIMESTAMP(6)) AS UPDATE_DT
 FROM OORDLIN OORDLIN
 LEFT JOIN OORDDTA OORDDTA
 ON OORDLIN.ord_id            =OORDDTA.ord_id
